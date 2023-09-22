@@ -15,7 +15,6 @@ function Game () {
     const [sec, setSec] = useState(5);
 
     useEffect(() => { 
-        const interval = setInterval(() => setSec(sec-1),1000);
         
         let config = {
             method: 'get',
@@ -25,9 +24,10 @@ function Game () {
           };
         
         if (word == "") {
-            console.log("hi")
+            
             axios.request(config)
             .then((response) => {
+                console.log("here");
                 setWord(response.data);
                 getScrambled(response.data);
                 saveWord(response.data);
@@ -37,11 +37,16 @@ function Game () {
             });
             
         }
-        gameOver();
-        return () => clearInterval(interval);
+        
         
     });
 
+    useEffect(() => {
+        const interval = setInterval(() => setSec(sec-1),1000);
+
+        gameOver();
+        return () => clearInterval(interval);
+    })
     
     const gameOver = () => {
         var hide = document.getElementById("play");
@@ -154,6 +159,7 @@ function Game () {
         url: `http://localhost:3000/guessWord?word=${guess}`,
         headers: { }
         };
+        
         
         axios.request(config)
             .then((response) => {
